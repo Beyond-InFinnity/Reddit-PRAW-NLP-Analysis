@@ -1,168 +1,85 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project 3: Web APIs & NLP
+# Distinguishing Reddit Users by Subreddit
 
-### Description
+### by Connor Finnerty
 
-In week four we learned about a few different classifiers. In week five we're learning about webscraping, APIs, and Natural Language Processing (NLP). This project will put those skills to the test.
+## Clearing the Fog of Flame Wars Started by Those Whose Homes are at No Risk of Burning Down
 
-For project 3, your goal is two-fold:
-1. Using [PRAW](https://praw.readthedocs.io/en/stable/index.html), you'll collect posts from two subreddits of your choosing.
-2. You'll then use NLP to train a classifier on which subreddit a given post came from. This is a binary classification problem.
+While the Internet has lead to the world population becoming ever-more interconnected, the anonymity it provides has caused a decline in social trust. Much of this decline has been attributed to antisocial behavior: twisted insults, hateful rhetoric, coordinated bullying, and doxxing. One overlooked element of anonymity, however, is the fact that people no longer know whether people engaging in discussions of politics and current affairs are members of their own society. Discussion of politics has not just become nationalized, it has become globalized.
 
+I don't mean to imply that foreigners have no right to engage in discourse regarding another country's politics. International trade, mutual defense pacts, inter-state resouce competetion, and violent conflict represent domains where decisions made by one state can affect another's people, and should be open to discussion by affected, effecting, and disinterested parties. Consequently, knowing a particular commenter's country or origin represents important contextualizing information, whereby a given commenter's epistemic standpoint may be assessed.
 
-#### About the API
+Reddit is the world's 18th largest website, and one of the most intense sites of in-depth political discussion. Reddit's upvote system naturally rewards user engagement, promoting detailed discussion between commenters' viewpoints. Two of the largest subreddits, r/Politics (approx. 8.5mil subscribers)  and r/WorldNews (approx. 38mil), are dedicated to dicussion of highly contentious current events. One of the challenges that Reddit presents to non-US users, as a website used primarily by those with US IP addresses (51.5%), is that the US perspective on global affairs tends to drown out voices of those with greater stakes and more intimate relationships to the affairs of non-US countries.
 
-For this project, you will be using [PRAW](https://praw.readthedocs.io/en/stable/index.html) to collect posts from two different subreddits. 
-
-To help you get started, we have a [notebook](./Reddit-PRAW-tutorial.ipynb) detailing the process of creating an app and obtaining your API credentials.
-
-Note: Rather than working in this template notebook, make a brand new "scraping" notebook (or script), with your own unique work and comments, so you can use this project in a portfolio!
+r/Politics, as a subreddit dedicated almost exclusively to US news, gives us an opportunity to filter out American voices in favor of those of non-US origin from discussion of r/WorldNews. By creating a TDF-IF vectorizer model, I hope to develop a preliminary classification method capable of distingushing between the topics and concepts typically employed by US users, so that the sentiments of non-US users may be brought to the forefront.
 
 ---
 
-### Requirements
+### Data Collection and Data Cleaning
 
-- Gather and prepare your data using PRAW.
-- **Create and compare two models**. Any two classifiers at least of your choosing: random forest, logistic regression, KNN, SVM, etc.
-- A Jupyter Notebook with your analysis for a peer audience of data scientists.
-- An executive summary of your results.
-- A short presentation (5-8 minutes) outlining your process and findings for a semi-technical audience.
+Data for this project was gathered using the Python Reddit API Wrapper (PRAW). By exploring the PRAW documentation, I was able to develop a method of scraping every comment made on the top posts over a given timeframe. Due to complications (Reddit deleted/hid all comments for discussion pertaining to the Presidential Debate, which constituted a large percentage of posts during many of the time periods I was scraping). To create a balanced set, I scraped the top 30 posts for both r/Politics and r/WorldNews for the prior week.
 
-**Pro Tip:** You can find a good example executive summary [here](https://www.proposify.biz/blog/executive-summary).
+Once that was completed, I:
 
----
-
-### Necessary Deliverables / Submission
-
-- Code must be in at least one clearly commented Jupyter Notebook.
-- A readme/executive summary in markdown.
-- You must submit your slide deck as a PDF.
-- Materials must be submitted by **10:00 AM (EST) on Wednesday, 7/10**.
+- cleaned each comment
+- generated a .csv sheet for each post
+- colated all 30 .csv sheets as Excel sheets in a single Excel file dedicated to each subreddit (for both r/Politics and r/WorldNews)
 
 ---
 
-## Rubric
-Your instructors will evaluate your project (for the most part) using the following criteria.  You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
+### EDA and Preprocessing
 
-For Project 3 the evaluation categories are as follows:<br>
-**The Data Science Process**
-- Problem Statement
-- Data Collection
-- Data Cleaning & EDA
-- Preprocessing & Modeling
-- Evaluation and Conceptual Understanding
-- Conclusion and Recommendations
+- Unpacked each sheet in both Excel files
+- Performed sentiment analysis and generated sentiment scores for each post's comment section (Excel sheet)
+- Appended sentiment scores to each sheet
+- visualized comment scores
+- eliminated irrelevant comments based on scores (those between -5 and 5)
+- plotted histogram of sentiment scores for each Excel file
 
-**Organization and Professionalism**
-- Organization
-- Visualizations
-- Python Syntax and Control Flow
-- Presentation
+Sentiment Scores for r/Politics
+![](images/dist_sent_scores_pol.png)
 
-**Scores will be out of 30 points based on the 10 categories in the rubric.** <br>
-*3 points per section*<br>
-
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
-
-
-### The Data Science Process
-
-**Problem Statement**
-- Is it clear what the goal of the project is?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
-
-**Data Collection**
-- Was enough data gathered to generate a significant result? (At least 1000 posts per subreddit)
-- Was data collected that was useful and relevant to the project?
-- Was data collection and storage optimized through custom functions, pipelines, and/or automation?
-- Was thought given to the server receiving the requests such as considering number of requests per second?
-
-**Data Cleaning and EDA**
-- Are missing values imputed/handled appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
-
-**Preprocessing and Modeling**
-- Is text data successfully converted to a matrix representation?
-- Are methods such as stop words, stemming, and lemmatization explored?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** two models)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
-
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
-
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
-
-
-### Organization and Professionalism
-
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
-
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
-
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` and `NLTK` methods used appropriately?
-
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
-
+Sentiment Scores for r/WorldNews
+![](images/dist_sent_scores_wn.png)
 
 ---
 
-### Why did we choose this project for you?
-This project covers three of the biggest concepts we cover in the class: Classification Modeling, Natural Language Processing and Data Wrangling/Acquisition.
+## Modeling
 
-Part 1 of the project focuses on **Data wrangling/gathering/acquisition**. This is a very important skill as not all the data you will need will be in clean CSVs or a single table in SQL.  There is a good chance that wherever you land you will have to gather some data from some unstructured/semi-structured sources; when possible, requesting information from an API, but sometimes scraping it because they don't have an API (or it's terribly documented).
+- First attempt was to use a Logistic Regression to see whether sentiment scores could be used to classify an r/Poltics user vs r/WorldNews user
+- Yielded poor results
 
-Part 2 of the project focuses on **Natural Language Processing** and converting standard text data (like Titles and Comments) into a format that allows us to analyze it and use it in modeling.
+![](images/conf_matr_log_reg.png)
 
-Part 3 of the project focuses on **Classification Modeling**.  Given that project 2 was a regression focused problem, we needed to give you a classification focused problem to practice the various models, means of assessment and preprocessing associated with classification.   
+- Moved on to Logistic Regression with TDF-IF
+
+![](images/conf_matr_log_reg_tdf_if.png)
+
+- compared the results to a Support Vector Classifer with TDF-IF
+
+![](images/conf_matr_svm_tdf_if.png)
+
+## Evaluation
+
+For this analysis, I was surprised to see that sentiment scores were not a particularly useful tool for distinguishing between the two comment sections. I was not surprised, however, to see that TDF-IF vectorizer was much more effective at distingushing commenters, given that the topics of discussion would likely easily differentiated by the most commonly used words.
+
+![](images/most_common_words.png)
+
+Since the TDF-IF columns were numerous and simple, I was also not surprised that a Logsistic Regressor performed about as well as a much more powerful technique, the SVM.
+
+## Conclusion and recommendations
+
+Users need to be given more information about the content they see online. This need scales proportionally with the importance and salience of the information in question. By creating NLP models that analyze content that people see on social media, users can become more grounded in their understanding of the sources and biases underlying the content they consume, allowing it to be properly contextualized before it's stored in their worldview schema. By creating a model that does a decent job of classifying r/Politics and r/WorldNews users, it gives promise to the idea that users can be made aware of the national origin of various forms of online discourse, so that they may understand why information they are unfamiliar with is being presented, and why particular rhetorical and conceptual techniques are being used. I will continue to work on this project and see if I can make a basic application that allows a user to examine a comment and see a visual of that commenter's likely country of origin based on their comment history.
+
+| Data | Source | Description |
+|------|--------|-------------|
+| Reddit User Political Spectrum | https://www.statista.com/statistics/517259/reddit-user-distribution-usa-political-spectrum/
+ | Bar chart showing Reddit User political views vs general population |
+| Reddit Traffic by Country | https://www.reddit.com/r/dataisbeautiful/comments/phhu9s/oc_reddit_traffic_by_country/
+ | Bar plot made by Reddit user showing reddit users by country |
+| Reddit background info | https://www.inc.com/christine-lagorio/reddit-whole-team-here.html | Article detailing information about Reddit and its history |
+| Quantifying gender biases towards politicians on Reddit | https://pubmed.ncbi.nlm.nih.gov/36288326/ | Study characterizing political biases on Reddit towards female politicians |
+| The Effect of Attitude, Social Trust and Trust in Social Networking Sites on Two Dimensions of Sharing Behavior | https://aisel.aisnet.org/amcis2012/proceedings/SocialIssues/11/ | Examining online content sharing behavior of Social Media Users |
+| Civility and Trust in Social Media | https://www.sciencedirect.com/science/article/abs/pii/S0167268119300563 | Study examining the relationship between online civility and user social trust |
+
+
+
